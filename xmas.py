@@ -4,7 +4,7 @@ import board
 import neopixel
 import datetime
 import logging
-from flask import Flask,render_template
+from flask import Flask, render_template
 from threading import Thread
 
 global animationThread
@@ -265,15 +265,14 @@ animations = {
 
 
 def getCPUTemp():
-  try:
-    tFile = open('/sys/class/thermal/thermal_zone0/temp')
-    temp = float(tFile.read())
-    tempC = temp/1000
-    return tempC
+    try:
+        tFile = open('/sys/class/thermal/thermal_zone0/temp')
+        temp = float(tFile.read())
+        tempC = temp/1000
+        return tempC
 
-  except:
-   return -100
-
+    except:
+        return -100
 
 
 def runAnimation(animationNumber=2047):
@@ -289,8 +288,8 @@ def runAnimation(animationNumber=2047):
         longwaitTime = 5000
         iteration = 10
 
-        if checkRun():
-            for i in range(0, 255, 5):
+        for i in range(0, 255, 10):
+            if checkRun():
                 if should_run == False:
                     break
 
@@ -335,7 +334,7 @@ def runAnimation(animationNumber=2047):
 
         else:
             colorWipe(pixels, (0, 0, 0), 10)
-            animationNumber = 2047  
+            animationNumber = 2047
             time.sleep(5)
         # xmas_tree_spiral(pixels)
 
@@ -365,7 +364,8 @@ def action(animationId, color, bkcolor):
         logging.error(e)
         httpErrorCode = 500
 
-    return render_template("changeAnimation.html", AnimationId = str(intAnimationId),CPUTemperatur=str(getCPUTemp()))
+    return render_template("changeAnimation.html", AnimationId=str(intAnimationId), CPUTemperatur=str(getCPUTemp()))
+
 
 # Main program logic follows:
 if __name__ == '__main__':
