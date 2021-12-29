@@ -62,6 +62,16 @@ def map_matrix(x, y):
     return indexValue
 
 
+def set_row_color(pixels, row_index, color=(255, 0, 0),  wait_ms=20):
+    for x in range(LED_COLUMN):
+        pixels[map_matrix(x, row_index)] = color
+
+
+def set_col_color(pixels, col_index, color=(255, 0, 0),  wait_ms=20):
+    for x in range(LED_ROW):
+        pixels[map_matrix(col_index, x)] = color
+
+
 def xmas_tree_raise_up(pixels, color=(255, 255, 255), bkcolor=(50, 0, 0), wait_ms=20, iterations=5):
     for i in range(iterations):
         pixels.fill(bkcolor)
@@ -85,17 +95,23 @@ def xmas_tree_raise_down(pixels, color=(255, 255, 255), bkcolor=(50, 0, 0), wait
             time.sleep(wait_ms/1000)
 
 
+def xmas_tree_raise_left(pixels, color=(255, 255, 255), bkcolor=(20, 20, 20), wait_ms=20, iterations=5):
+    for i in range(iterations):
+        pixels.fill(bkcolor)
+        # time.sleep(wait_ms/1000.0)
+
+        for y in range(LED_COLUMN):
+            set_col_color(pixels, y, color)
+            pixels.show()
+            time.sleep(wait_ms/1000)
+
+
 def colorWipe(pixels, color, wait_ms=20):
     """Wipe color across display a pixel at a time."""
     for y in range(LED_ROW):
         set_row_color(pixels, y, color)
         pixels.show()
         time.sleep(wait_ms/1000.0)
-
-
-def set_row_color(pixels, row_index, color=(255, 0, 0),  wait_ms=20):
-    for x in range(LED_COLUMN):
-        pixels[map_matrix(x, row_index)] = color
 
 
 def uni_color(pixels, color=(255, 255, 255), wait_ms=50, iterations=5):
@@ -229,7 +245,8 @@ def wheel(pos):
         r = 0
         g = int(pos * 3)
         b = int(255 - pos * 3)
-    print("r:" + str(r) + " g:" + str(g) + " b: " + str(b))
+    #print("r:" + str(r) + " g:" + str(g) + " b: " + str(b))
+
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
@@ -259,8 +276,8 @@ def checkRun():
 animations = {
     1: {'name': 'Uni Color', 'color': (255, 255, 255), 'bkcolor': (0, 0, 0)},
     2: {'name': 'Snake Color', 'color': (255, 255, 255), 'bkcolor': (0, 0, 0)},
-    4: {'name': 'Snake Color', 'color': (255, 255, 255), 'bkcolor': (0, 0, 0)},
-    8: {'name': 'xmas_tree_raise_up', 'color': (255, 255, 255), 'bkcolor': (0, 0, 0)},
+    4: {'name': 'tree raise left', 'color': (255, 255, 255), 'bkcolor': (0, 0, 0)},
+    8: {'name': 'tree raise up', 'color': (255, 255, 255), 'bkcolor': (0, 0, 0)},
 }
 
 
@@ -304,8 +321,8 @@ def runAnimation(animationNumber=2047):
                     uni_color(pixels=pixels, wait_ms=longwaitTime, color=color)
 
                 if (animationNumber & 4 == 4):
-                    uni_color(pixels=pixels, wait_ms=longwaitTime,
-                              color=color, iterations=1)
+                     xmas_tree_raise_left(pixels, color, bkcolor,
+                                 longwaitTime, iteration)
 
                 if (animationNumber & 8 == 8):
                     snake_color(pixels=pixels, color=color,
